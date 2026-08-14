@@ -24,15 +24,11 @@ jobs:
         BOARD: d1_mini32
     steps:
       - uses: actions/checkout@v7
-        with:
-          submodules: recursive
-      - uses: actions/setup-python@v7
-      - run: pip install esptool
-      - run: bash ./ESP_Build_Scripts/build_sketch.sh -s ${{env.SKETCH_NAME}} -c ${{env.CORE}} -b ${{env.BOARD}} -f 160
-      - uses: actions/upload-artifact@v7
-        with:
-          name: ${{env.CORE}}_${{env.BOARD}}_${{env.SKETCH_NAME}}
-          path: ./EEP/*
+      - uses: hredan/eep-build-action@switch-to-python
+          with:
+            sketch-name: ${{env.SKETCH_NAME}}
+            core: ${{env.CORE}}
+            board: ${{env.BOARD}}
   build_ESP8266:
     needs: [cpplint, arduino_lint]
     runs-on: ubuntu-latest
@@ -42,13 +38,11 @@ jobs:
         BOARD: d1_mini
     steps:
       - uses: actions/checkout@v7
+      - uses: hredan/eep-build-action@switch-to-python
         with:
-          submodules: recursive
-      - uses: actions/setup-python@v7
-      - run: pip install esptool
-      - run: bash ./ESP_Build_Scripts/build_sketch.sh -s ${{env.SKETCH_NAME}} -c ${{env.CORE}} -b ${{env.BOARD}} -f 160
-      - uses: actions/upload-artifact@v7
-        with:
-          name: ${{env.CORE}}_${{env.BOARD}}_${{env.SKETCH_NAME}}
-          path: ./EEP/*
+          sketch-name: ${{env.SKETCH_NAME}}
+          core: ${{env.CORE}}
+          board: ${{env.BOARD}}
+          cpu-frequency: 160
+
           
