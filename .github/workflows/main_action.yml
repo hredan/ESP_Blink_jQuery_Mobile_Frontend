@@ -50,13 +50,6 @@ jobs:
       core: esp32
       board: esp32c6
       fqbn-ext: "CDCOnBoot=cdc"
-  build_eep_esp32h2:
-    needs: [cpplint, arduino_lint]
-    uses: ./.github/workflows/build_eep.yml
-    with:
-      core: esp32
-      board: esp32h2
-      fqbn-ext: "CDCOnBoot=cdc"
   build_eep_esp32p4:
     needs: [cpplint, arduino_lint]
     uses: ./.github/workflows/build_eep.yml
