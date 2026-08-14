@@ -46,6 +46,8 @@ class HandleWebpage {
   void handleWebRequests();
 
   void handleSetLed();
+  int resolveLedPin(const String& gpioValue);
+  void setLedPinState(int gpio, bool isOn);
 
   bool loadFromLittleFS(String path);
 #ifdef ESP32

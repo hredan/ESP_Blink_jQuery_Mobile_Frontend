@@ -39,30 +39,52 @@ void HandleWebpage::handleRoot() {  // When URI / is requested, send a web page
   handleWebRequests();
 }
 
+int HandleWebpage::resolveLedPin(const String& gpioValue) {
+  if (gpioValue.length() == 0) {
+    return LED_BUILTIN;
+  }
+
+  int gpio = gpioValue.toInt();
+  if (gpio < 0) {
+    return LED_BUILTIN;
+  }
+
+  return gpio;
+}
+
+void HandleWebpage::setLedPinState(int gpio, bool isOn) {
+  pinMode(gpio, OUTPUT);
+
+  if (gpio == LED_BUILTIN) {
+#ifdef ESP32
+    digitalWrite(gpio, isOn ? HIGH : LOW);
+#else
+    digitalWrite(gpio, isOn ? LOW : HIGH);
+#endif
+    return;
+  }
+
+  digitalWrite(gpio, isOn ? HIGH : LOW);
+}
+
 void HandleWebpage::handleSetLed() {
   Serial.println("handleSetGain: " + _webServer->arg("plain"));
 
   if (_webServer->hasArg("led")) {
     String ledValue = _webServer->arg("led");
-    Serial.printf("ledValue: %s\n", ledValue.c_str());
-    if (ledValue == "true") {
-#ifdef ESP32
-      digitalWrite(LED_BUILTIN, HIGH);
-#else
-      digitalWrite(LED_BUILTIN, LOW);
-#endif
-    } else {
-#ifdef ESP32
-      digitalWrite(LED_BUILTIN, LOW);
-#else
-      digitalWrite(LED_BUILTIN, HIGH);
-#endif
-    }
+    String gpioValue = _webServer->hasArg("gpio") ? _webServer->arg("gpio") : String(LED_BUILTIN);
+    int gpio = resolveLedPin(gpioValue);
+    bool isOn = (ledValue == "true");
 
-    _webServer->send(200, "text/plane", "{\"success\": true}");
+    Serial.printf("ledValue: %s, gpio: %d\n", ledValue.c_str(), gpio);
+    setLedPinState(gpio, isOn);
+
+    String response = "{\"success\": true, \"gpio\": " + String(gpio) +
+                      ", \"led\": " + (isOn ? "true" : "false") + "}";
+    _webServer->send(200, "text/plain", response);
   } else {
     Serial.println("Error handleSetLed: missing argument led!");
-    _webServer->send(200, "text/plane", "{\"success\": false}");
+    _webServer->send(200, "text/plain", "{\"success\": false}");
   }
 }
 
