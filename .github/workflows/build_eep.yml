@@ -1,0 +1,37 @@
+on:
+    workflow_call:
+      inputs:
+        core:
+          description: 'ESP core (esp8266 or esp32)'
+          default: 'esp32'
+          required: true
+          type: string
+        board:
+          description: 'ESP board'
+          default: 'd1_mini32'
+          type: string
+          required: true
+        cpu-frequency:
+          description: 'CPU frequency in MHz (optional)'
+          default: '160'
+          type: string
+          required: false
+        fqbn-ext:
+          description: 'Additional FQBN parameters (optional)'
+          default: ''
+          type: string
+          required: false
+jobs:
+    build_eep:
+        runs-on: ubuntu-latest
+        env:
+            SKETCH_NAME: ESP_Blink_jQuery_Mobile_Frontend
+        steps:
+          - uses: actions/checkout@v6
+          - uses: hredan/eep-build-action@v1.0.0
+            with:
+              sketch-name: ${{env.SKETCH_NAME}}
+              core: ${{ inputs.core }}
+              board: ${{ inputs.board}}
+              cpu-frequency: ${{ inputs.cpu-frequency }}
+              fqbn-ext: ${{ inputs.fqbn-ext }}

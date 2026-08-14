@@ -1,24 +1,22 @@
-#!/bin/bash
-SCRIPT_DIR=${0%/*}
-SKETCH_NAME=ESP_jQuery_Mobile_Interface
-CORE=esp8266
-BOARD=d1_mini
-CPUF=80
+#!/usr/bin/bash
+# to use the script, https://github.com/hredan/eep-build-action must be cloned before.
+# set path in BUILD_ACTIOM_DIR to the path of the cloned repository.
+# With GitBash the scripts are working also on Windows.
 
-SCRIPT_DIR=${0%/*}
+BUILD_ACTION_DIR="../eep-build-action/"
+export INPUT_SKETCH_NAME="ESP_Blink_jQuery_Mobile_Frontend"
+export INPUT_CORE="esp8266"
+export INPUT_BOARD="d1_mini"
+export INPUT_CORE_VERSION=""
+export INPUT_CPU_F="80"
+export INPUT_FLASH="4M2M"
 
-# cleanup EEP directory before starting build and creating eef package (eep)
-EEP_DIR=${SCRIPT_DIR}/../EEP
-if [ -d ${EEP_DIR} ]; then
-    rm -r ${EEP_DIR}
-fi
+URL=$(git remote get-url origin)
+HASH=$(git rev-parse HEAD)
 
-# build ESP binaries
-bash ${SCRIPT_DIR}/../ESP_Build_Scripts/build_sketch.sh -s ${SKETCH_NAME} -c ${CORE} -b ${BOARD} -f ${CPUF}
 
-# create zip file (eef package)
-if [ -d ${EEP_DIR} ]; then
-     zip -j ${CORE}_${BOARD}_${SKETCH_NAME}.eep ${EEP_DIR}/*
-else
-    echo "Error could not find directory "
-fi
+#$BUILD_ACTION_DIR/build_sketch.sh -s $INPUT_SKETCH_NAME -c $INPUT_CORE -b $INPUT_BOARD -f $INPUT_CPU_F -l $INPUT_LIBS
+python3 $BUILD_ACTION_DIR/build_sketch.py
+$BUILD_ACTION_DIR/create_build_info.sh -r $URL -s $HASH
+MCU=$(python3 $BUILD_ACTION_DIR/get_mcu.py -c $INPUT_CORE -b $INPUT_BOARD)
+$BUILD_ACTION_DIR/create_eep_package.sh -s $INPUT_SKETCH_NAME -c $MCU -b $INPUT_BOARD
