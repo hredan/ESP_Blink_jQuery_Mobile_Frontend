@@ -25,10 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: hredan/eep-build-action@switch-to-python
-          with:
-            sketch-name: ${{env.SKETCH_NAME}}
-            core: ${{env.CORE}}
-            board: ${{env.BOARD}}
+        with:
+          sketch-name: ${{env.SKETCH_NAME}}
+          core: ${{env.CORE}}
+          board: ${{env.BOARD}}
   build_ESP8266:
     needs: [cpplint, arduino_lint]
     runs-on: ubuntu-latest
