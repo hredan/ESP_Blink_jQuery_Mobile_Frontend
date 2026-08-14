@@ -25,6 +25,10 @@
   #include <ESP8266WiFi.h>  // https://github.com/esp8266/Arduino
 #endif
 
+#ifndef LED_BUILTIN
+  #define LED_BUILTIN 2  // In case the board doesn't have an LED_BUILTIN defined, we can default to pin 2
+#endif
+
 #include "LittleFS.h"
 #include "handleWebpage.h"
 
