@@ -6,13 +6,15 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
     - run: pip install cpplint
     - run: cpplint --linelength=120 --extensions=hpp,cpp,h,c,ino --recursive .
   arduino_lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: arduino/arduino-lint-action@v1
+      - uses: arduino/arduino-lint-action@v3
         with:
           library-manager: 'update'
   build_ESP32:
