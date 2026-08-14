@@ -4,14 +4,14 @@ jobs:
   cpplint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v7
     - run: pip install cpplint
     - run: cpplint --linelength=120 --extensions=hpp,cpp,h,c,ino --recursive .
   arduino_lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - uses: arduino/arduino-lint-action@v1
         with:
           library-manager: 'update'
@@ -23,13 +23,13 @@ jobs:
         CORE: esp32
         BOARD: d1_mini32
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v7
       - run: pip install esptool
       - run: bash ./ESP_Build_Scripts/build_sketch.sh -s ${{env.SKETCH_NAME}} -c ${{env.CORE}} -b ${{env.BOARD}} -f 160
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{env.CORE}}_${{env.BOARD}}_${{env.SKETCH_NAME}}
           path: ./EEP/*
@@ -41,13 +41,13 @@ jobs:
         CORE: esp8266
         BOARD: d1_mini
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v7
       - run: pip install esptool
       - run: bash ./ESP_Build_Scripts/build_sketch.sh -s ${{env.SKETCH_NAME}} -c ${{env.CORE}} -b ${{env.BOARD}} -f 160
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{env.CORE}}_${{env.BOARD}}_${{env.SKETCH_NAME}}
           path: ./EEP/*
